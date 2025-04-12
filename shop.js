@@ -235,58 +235,74 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // 初始化表單提交
+    const form = document.getElementById('cartForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault(); // 阻止表單默認提交
+            submitOrder();
+        });
+    }
+
     // 提交表單
     function submitOrder() {
-        const form = document.getElementById('cartForm');
-        const formData = new FormData(form);
-        
-        // 添加購物車內容到備註
-        const cartItems = document.querySelectorAll('.cart-item');
-        let orderDetails = '訂購內容：\n';
-        cartItems.forEach(item => {
-            const name = item.querySelector('.cart-item-info h4').textContent;
-            const quantity = item.querySelector('.quantity').textContent;
-            const price = item.querySelector('.item-price').textContent;
-            orderDetails += `${name} x ${quantity} (${price})\n`;
-        });
-        
-        // 添加訂購人資訊
-        const customerInfo = {
-            name: document.getElementById('customerName').value,
-            phone: document.getElementById('customerPhone').value,
-            email: document.getElementById('customerEmail').value,
-            address: document.getElementById('customerAddress').value,
-            note: document.getElementById('customerNote').value
-        };
-        
-        // 構建通知訊息
-        const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${customerInfo.name}\n電話：${customerInfo.phone}\n地址：${customerInfo.address}\n備註：${customerInfo.note}`;
-        
-        // 發送通知到 LINE
-        fetch('https://notify-api.line.me/api/notify', {
-            method: 'POST',
-            headers: {
-                'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
-            },
-            body: new URLSearchParams({
-                message: message
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.status === 200) {
-                alert('訂單已送出，我們會盡快與您聯繫！');
-                cart = [];
-                closeCart();
-                updateCartDisplay();
-            } else {
-                alert('發送訂單時發生錯誤，請稍後再試。');
+        try {
+            // 驗證表單
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const email = document.getElementById('customerEmail').value;
+            const address = document.getElementById('customerAddress').value;
+            
+            if (!name || !phone || !email || !address) {
+                alert('請填寫完整的訂購人資訊！');
+                return;
             }
-        })
-        .catch(error => {
-            console.error('發送訂單時發生錯誤:', error);
-            alert('發送訂單時發生錯誤，請稍後再試。');
-        });
+
+            // 添加購物車內容到備註
+            const cartItems = document.querySelectorAll('.cart-item');
+            let orderDetails = '訂購內容：\n';
+            cartItems.forEach(item => {
+                const name = item.querySelector('.cart-item-info h4').textContent;
+                const quantity = item.querySelector('.quantity').textContent;
+                const price = item.querySelector('.item-price').textContent;
+                orderDetails += `${name} x ${quantity} (${price})\n`;
+            });
+            
+            // 添加訂購人資訊
+            const note = document.getElementById('customerNote').value;
+            
+            // 構建通知訊息
+            const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
+            
+            // 發送通知到 LINE
+            fetch('https://notify-api.line.me/api/notify', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
+                },
+                body: new URLSearchParams({
+                    message: message
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 200) {
+                    alert('訂單已送出，我們會盡快與您聯繫！');
+                    cart = [];
+                    closeCart();
+                    updateCartDisplay();
+                } else {
+                    throw new Error('LINE Notify API 返回錯誤狀態');
+                }
+            })
+            .catch(error => {
+                console.error('發送訂單時發生錯誤:', error);
+                alert('發送訂單時發生錯誤，請稍後再試。');
+            });
+        } catch (error) {
+            console.error('處理訂單時發生錯誤:', error);
+            alert('處理訂單時發生錯誤，請檢查輸入並重試。');
+        }
     }
 
     // 綁定加入購物車按鈕
