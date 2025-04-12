@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
-            fetch('https://cors-anywhere.herokuapp.com/https://taiwanagla2024.netlify.app/.netlify/functions/submit-order', {
+            fetch('https://taiwanagla2024.netlify.app/.netlify/functions/submit-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -293,7 +293,11 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Error submitting order:', error);
-                alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
+                if (error.message.includes('403')) {
+                    alert('發送訂單時發生錯誤。請確認：\n1. LINE Notify Token 已正確設置\n2. Token 未過期\n3. Token 有足夠的權限');
+                } else {
+                    alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
+                }
             });
         } catch (error) {
             console.error('Error in submitOrder function:', error);
