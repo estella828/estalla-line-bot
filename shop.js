@@ -266,11 +266,13 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
-            fetch('https://taiwanagla2024.netlify.app/.netlify/functions/submit-order', {
+            fetch('/.netlify/functions/submit-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                mode: 'cors',
+                credentials: 'include',
                 body: JSON.stringify({ message: message })
             })
             .then(response => {
@@ -358,6 +360,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 headers: {
                     'Content-Type': 'application/json'
                 },
+                mode: 'cors',
+                credentials: 'include',
                 body: JSON.stringify({ message: testMessage })
             })
             .then(response => {
