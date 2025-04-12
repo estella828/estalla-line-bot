@@ -392,9 +392,51 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // 在頁面加載時添加測試按鈕
+    // 測試函數
+    function testFunction() {
+        try {
+            console.log('Testing Netlify function...');
+            
+            fetch('/.netlify/functions/test', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                mode: 'cors',
+                credentials: 'include',
+                body: JSON.stringify({ test: true })
+            })
+            .then(response => {
+                console.log('Test API Response:', response);
+                if (!response.ok) {
+                    throw new Error(`Test API returned status ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Test API Response Data:', data);
+                alert('測試成功！\n\n回應數據：\n' + JSON.stringify(data, null, 2));
+            })
+            .catch(error => {
+                console.error('Error testing function:', error);
+                alert('測試失敗。\n\n錯誤詳情：' + error.message);
+            });
+        } catch (error) {
+            console.error('Error in testFunction:', error);
+            alert('測試失敗。\n\n錯誤詳情：' + error.message);
+        }
+    }
+
+    // 在 HTML 中添加測試按鈕
+    // 在購物車按鈕附近添加：
     const testButton = document.createElement('button');
-    testButton.textContent = '測試 API 連接';
-    testButton.onclick = testApi;
+    testButton.textContent = '測試功能';
+    testButton.onclick = testFunction;
     document.body.appendChild(testButton);
+
+    // 在頁面加載時添加測試按鈕
+    const testApiButton = document.createElement('button');
+    testApiButton.textContent = '測試 API 連接';
+    testApiButton.onclick = testApi;
+    document.body.appendChild(testApiButton);
 });
