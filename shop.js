@@ -265,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // 構建通知訊息
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
-            // 發送通知到 Netlify 函數
-            fetch('https://api.netlify.com/functions/submit-order', {
+            // 發送通知到 Vercel API
+            fetch('https://estella828.vercel.app/api/submit-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -275,7 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Netlify 函數返回錯誤狀態');
+                    throw new Error('API 返回錯誤狀態');
                 }
                 return response.json();
             })
@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     closeCart();
                     updateCartDisplay();
                 } else {
-                    throw new Error('Netlify 函數返回非成功狀態');
+                    throw new Error('API 返回非成功狀態');
                 }
             })
             .catch(error => {
