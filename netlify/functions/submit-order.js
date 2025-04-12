@@ -2,8 +2,13 @@ const got = require('got');
 
 exports.handler = async (event) => {
     try {
+        console.log('Request received:', event);
+        console.log('Request headers:', event.headers);
+        console.log('Request body:', event.body);
+
         // 處理預飛行請求
         if (event.httpMethod === 'OPTIONS') {
+            console.log('Handling OPTIONS request');
             return {
                 statusCode: 200,
                 headers: {
@@ -15,8 +20,6 @@ exports.handler = async (event) => {
             };
         }
 
-        console.log('Received event:', event);
-        
         if (event.httpMethod !== 'POST') {
             console.log('Invalid HTTP method:', event.httpMethod);
             return {
@@ -56,38 +59,54 @@ exports.handler = async (event) => {
         }
 
         console.log('Sending notification to LINE Notify...');
+        console.log('Using LINE Notify token:', token.substring(0, 5) + '...'); // 只顯示前5個字符
         
         // 發送通知到 LINE
-        const response = await got.post('https://notify-api.line.me/api/notify', {
-            headers: {
-                'Authorization': `Bearer ${token}`,
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            form: {
-                message: message
-            }
-        });
-
-        console.log('LINE Notify response:', response.body);
-        const data = await response.json();
-
-        console.log('LINE Notify response data:', data);
-
-        if (data.status === 200) {
-            return {
-                statusCode: 200,
+        try {
+            const response = await got.post('https://notify-api.line.me/api/notify', {
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
-                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: JSON.stringify({ 
-                    message: 'Order submitted successfully',
-                    data: data
-                })
-            };
-        } else {
-            console.error('LINE Notify returned non-200 status:', data);
+                form: {
+                    message: message
+                }
+            });
+
+            console.log('LINE Notify response:', response.body);
+            const data = await response.json();
+            console.log('LINE Notify response data:', data);
+
+            if (data.status === 200) {
+                return {
+                    statusCode: 200,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    },
+                    body: JSON.stringify({ 
+                        message: 'Order submitted successfully',
+                        data: data
+                    })
+                };
+            } else {
+                console.error('LINE Notify returned non-200 status:', data);
+                return {
+                    statusCode: 500,
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    },
+                    body: JSON.stringify({ 
+                        message: 'Failed to send notification',
+                        error: data.message || 'LINE Notify returned non-200 status'
+                    })
+                };
+            }
+        } catch (error) {
+            console.error('Error sending LINE Notify:', error);
             return {
                 statusCode: 500,
                 headers: {
@@ -96,8 +115,9 @@ exports.handler = async (event) => {
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                 },
                 body: JSON.stringify({ 
-                    message: 'Failed to send notification',
-                    error: data.message || 'LINE Notify returned non-200 status'
+                    message: 'Error sending notification',
+                    error: error.message,
+                    stack: error.stack
                 })
             };
         }
@@ -111,7 +131,7 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             },
             body: JSON.stringify({ 
-                message: 'Error submitting order',
+                message: 'Error processing order',
                 error: error.message,
                 stack: error.stack
             })
