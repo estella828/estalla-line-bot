@@ -2,12 +2,30 @@ const got = require('got');
 
 exports.handler = async (event) => {
     try {
+        // 處理預飛行請求
+        if (event.httpMethod === 'OPTIONS') {
+            return {
+                statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                },
+                body: ''
+            };
+        }
+
         console.log('Received event:', event);
         
         if (event.httpMethod !== 'POST') {
             console.log('Invalid HTTP method:', event.httpMethod);
             return {
                 statusCode: 405,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                },
                 body: JSON.stringify({ 
                     message: 'Method not allowed',
                     error: 'Only POST method is allowed'
@@ -25,6 +43,11 @@ exports.handler = async (event) => {
             console.log('LINE_NOTIFY_TOKEN not found in environment variables');
             return {
                 statusCode: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                },
                 body: JSON.stringify({ 
                     message: 'LINE Notify token not configured',
                     error: 'Please set LINE_NOTIFY_TOKEN in Netlify environment variables'
@@ -53,6 +76,11 @@ exports.handler = async (event) => {
         if (data.status === 200) {
             return {
                 statusCode: 200,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                },
                 body: JSON.stringify({ 
                     message: 'Order submitted successfully',
                     data: data
@@ -62,6 +90,11 @@ exports.handler = async (event) => {
             console.error('LINE Notify returned non-200 status:', data);
             return {
                 statusCode: 500,
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                },
                 body: JSON.stringify({ 
                     message: 'Failed to send notification',
                     error: data.message || 'LINE Notify returned non-200 status'
@@ -72,6 +105,11 @@ exports.handler = async (event) => {
         console.error('Error in submit-order function:', error);
         return {
             statusCode: 500,
+            headers: {
+                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+            },
             body: JSON.stringify({ 
                 message: 'Error submitting order',
                 error: error.message,
