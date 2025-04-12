@@ -1,19 +1,28 @@
 [build]
   command = "echo 'No build command needed'"
-  publish = ""
+  publish = "."
 
 [functions]
   directory = "netlify/functions"
 
-[redirects]
-  # Redirect all requests to the index.html file
-  / = /index.html
-  /cart = /cart.html
-  /checkout = /checkout.html
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[redirects]]
+  from = "/cart"
+  to = "/cart.html"
+  status = 200
+
+[[redirects]]
+  from = "/checkout"
+  to = "/checkout.html"
+  status = 200
 
 [headers]
-  # Enable CORS for the functions directory
-  "/.netlify/functions/*" =
-    - "Access-Control-Allow-Origin: *"
-    - "Access-Control-Allow-Methods: GET,PUT,POST,DELETE,OPTIONS"
-    - "Access-Control-Allow-Headers: Content-Type, Authorization"
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET,PUT,POST,DELETE,OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
