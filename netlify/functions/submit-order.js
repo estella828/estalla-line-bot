@@ -15,29 +15,51 @@ exports.handler = async (event) => {
         if (!token) {
             return {
                 statusCode: 500,
-                body: JSON.stringify({ message: 'LINE Notify token not configured' })
+                body: JSON.stringify({ 
+                    message: 'LINE Notify token not configured',
+                    error: 'Please set LINE_NOTIFY_TOKEN in Netlify environment variables'
+                })
             };
         }
 
         // 發送通知到 LINE
         const response = await got.post('https://notify-api.line.me/api/notify', {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/x-www-form-urlencoded'
             },
             form: {
                 message: message
             }
         });
 
-        return {
-            statusCode: 200,
-            body: JSON.stringify({ message: 'Order submitted successfully' })
-        };
+        const data = await response.json();
+
+        if (data.status === 200) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ 
+                    message: 'Order submitted successfully',
+                    data: data
+                })
+            };
+        } else {
+            return {
+                statusCode: 500,
+                body: JSON.stringify({ 
+                    message: 'Failed to send notification',
+                    error: data.message
+                })
+            };
+        }
     } catch (error) {
         console.error('Error submitting order:', error);
         return {
             statusCode: 500,
-            body: JSON.stringify({ message: 'Error submitting order', error: error.message })
+            body: JSON.stringify({ 
+                message: 'Error submitting order',
+                error: error.message
+            })
         };
     }
 };
