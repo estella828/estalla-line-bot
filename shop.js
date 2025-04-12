@@ -265,8 +265,8 @@ document.addEventListener('DOMContentLoaded', function() {
             // 構建通知訊息
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
-            // 發送通知到 LINE
-            fetch('https://notify-api.line.me/api/notify', {
+            // 發送通知到 LINE（通過代理）
+            fetch('https://cors-anywhere.herokuapp.com/https://notify-api.line.me/api/notify', {
                 method: 'POST',
                 headers: {
                     'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
