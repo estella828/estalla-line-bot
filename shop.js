@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
-            fetch('https://estella828.github.io/taiwanagla2024/.netlify/functions/submit-order', {
+            fetch('https://taiwanagla2024.netlify.app/.netlify/functions/submit-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
