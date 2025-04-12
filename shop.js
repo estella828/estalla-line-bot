@@ -265,14 +265,36 @@ document.addEventListener('DOMContentLoaded', function() {
             // 構建通知訊息
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
-            // 直接顯示訂單內容，不發送通知
-            alert('訂單已提交成功！\n\n' + message);
-            
-            // 清空購物車
-            cart = [];
-            closeCart();
-            updateCartDisplay();
-            
+            // 發送通知到 LINE
+            fetch('https://notify-api.line.me/api/notify', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
+                },
+                body: new URLSearchParams({
+                    message: message
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('LINE Notify API 返回錯誤狀態');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 200) {
+                    alert('訂單已送出，我們會盡快與您聯繫！');
+                    cart = [];
+                    closeCart();
+                    updateCartDisplay();
+                } else {
+                    throw new Error('LINE Notify API 返回非 200 狀態碼');
+                }
+            })
+            .catch(error => {
+                console.error('發送訂單時發生錯誤:', error);
+                alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
+            });
         } catch (error) {
             console.error('處理訂單時發生的錯誤:', error);
             alert('處理訂單時發生錯誤，請檢查輸入並重試。\n錯誤詳情：' + error.message);
