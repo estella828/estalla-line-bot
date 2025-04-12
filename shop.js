@@ -343,4 +343,43 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 初始化顯示
     updateCartDisplay();
+
+    // 測試 API 連接
+    function testApi() {
+        try {
+            const testMessage = '測試訊息：網站正在運作正常';
+            
+            fetch('https://cors-anywhere.herokuapp.com/https://notify-api.line.me/api/notify', {
+                method: 'POST',
+                headers: {
+                    'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
+                },
+                body: new URLSearchParams({
+                    message: testMessage
+                })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('API 返回錯誤狀態');
+                }
+                return response.json();
+            })
+            .then(data => {
+                alert('API 測試成功！');
+            })
+            .catch(error => {
+                console.error('API 測試失敗:', error);
+                alert('API 測試失敗。\n錯誤詳情：' + error.message);
+            });
+        } catch (error) {
+            console.error('API 測試時發生錯誤:', error);
+            alert('API 測試時發生錯誤。\n錯誤詳情：' + error.message);
+        }
+    }
+
+    // 在頁面加載時添加測試按鈕
+    const testButton = document.createElement('button');
+    testButton.textContent = '測試 API 連接';
+    testButton.onclick = testApi;
+    document.body.appendChild(testButton);
 });
