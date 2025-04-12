@@ -274,27 +274,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ message: message })
             })
             .then(response => {
+                console.log('Netlify API response:', response);
                 if (!response.ok) {
-                    throw new Error('Netlify API 返回錯誤狀態');
+                    throw new Error(`Netlify API returned status ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
+                console.log('Netlify API response data:', data);
                 if (data.message === 'Order submitted successfully') {
                     alert('訂單已送出，我們會盡快與您聯繫！');
                     cart = [];
                     closeCart();
                     updateCartDisplay();
                 } else {
-                    throw new Error(data.error || 'API 返回非成功狀態');
+                    throw new Error(data.error || 'API returned non-success status');
                 }
             })
             .catch(error => {
-                console.error('發送訂單時發生錯誤:', error);
+                console.error('Error submitting order:', error);
                 alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
             });
         } catch (error) {
-            console.error('處理訂單時發生的錯誤:', error);
+            console.error('Error in submitOrder function:', error);
             alert('處理訂單時發生錯誤，請檢查輸入並重試。\n錯誤詳情：' + error.message);
         }
     }
