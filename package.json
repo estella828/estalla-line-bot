@@ -1,0 +1,12 @@
+{
+  "name": "taiwanagla2024",
+  "version": "1.0.0",
+  "description": "Taiwan Agla 2024 Website",
+  "main": "index.html",
+  "scripts": {
+    "start": "echo 'No build command needed'"
+  },
+  "dependencies": {
+    "got": "^11.8.5"
+  }
+}
