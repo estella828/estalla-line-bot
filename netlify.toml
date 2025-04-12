@@ -21,8 +21,32 @@
   status = 200
 
 [headers]
+  # Enable CORS for all routes
+  for = "/*"
+    [[headers.values]]
+      key = "Access-Control-Allow-Origin"
+      value = "*"
+    [[headers.values]]
+      key = "Access-Control-Allow-Methods"
+      value = "GET,PUT,POST,DELETE,OPTIONS"
+    [[headers.values]]
+      key = "Access-Control-Allow-Headers"
+      value = "Content-Type, Authorization"
+
+  # Enable CORS for functions
   for = "/.netlify/functions/*"
-  [headers.values]
-    Access-Control-Allow-Origin = "*"
-    Access-Control-Allow-Methods = "GET,PUT,POST,DELETE,OPTIONS"
-    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    [[headers.values]]
+      key = "Access-Control-Allow-Origin"
+      value = "*"
+    [[headers.values]]
+      key = "Access-Control-Allow-Methods"
+      value = "GET,PUT,POST,DELETE,OPTIONS"
+    [[headers.values]]
+      key = "Access-Control-Allow-Headers"
+      value = "Content-Type, Authorization"
+    [[headers.values]]
+      key = "Access-Control-Allow-Credentials"
+      value = "true"
+    [[headers.values]]
+      key = "Access-Control-Max-Age"
+      value = "86400"
