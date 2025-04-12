@@ -265,30 +265,28 @@ document.addEventListener('DOMContentLoaded', function() {
             // 構建通知訊息
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
-            // 發送通知到 LINE（通過代理）
-            fetch('https://cors-anywhere.herokuapp.com/https://notify-api.line.me/api/notify', {
+            // 發送通知到 Netlify 函數
+            fetch('https://api.netlify.com/functions/submit-order', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
+                    'Content-Type': 'application/json'
                 },
-                body: new URLSearchParams({
-                    message: message
-                })
+                body: JSON.stringify({ message: message })
             })
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('LINE Notify API 返回錯誤狀態');
+                    throw new Error('Netlify 函數返回錯誤狀態');
                 }
                 return response.json();
             })
             .then(data => {
-                if (data.status === 200) {
+                if (data.message === 'Order submitted successfully') {
                     alert('訂單已送出，我們會盡快與您聯繫！');
                     cart = [];
                     closeCart();
                     updateCartDisplay();
                 } else {
-                    throw new Error('LINE Notify API 返回非 200 狀態碼');
+                    throw new Error('Netlify 函數返回非成功狀態');
                 }
             })
             .catch(error => {
@@ -349,14 +347,12 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const testMessage = '測試訊息：網站正在運作正常';
             
-            fetch('https://cors-anywhere.herokuapp.com/https://notify-api.line.me/api/notify', {
+            fetch('https://api.netlify.com/functions/submit-order', {
                 method: 'POST',
                 headers: {
-                    'Authorization': 'Bearer R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU='
+                    'Content-Type': 'application/json'
                 },
-                body: new URLSearchParams({
-                    message: testMessage
-                })
+                body: JSON.stringify({ message: testMessage })
             })
             .then(response => {
                 if (!response.ok) {
