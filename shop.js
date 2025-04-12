@@ -235,25 +235,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // 初始化表單提交
-    const form = document.getElementById('cartForm');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // 阻止表單默認提交
-            submitOrder();
-        });
-    }
-
     // 提交表單
     function submitOrder() {
         try {
             // 驗證表單
-            const name = document.getElementById('customerName').value;
-            const phone = document.getElementById('customerPhone').value;
-            const email = document.getElementById('customerEmail').value;
-            const address = document.getElementById('customerAddress').value;
+            const name = document.getElementById('customerName')?.value || '';
+            const phone = document.getElementById('customerPhone')?.value || '';
+            const email = document.getElementById('customerEmail')?.value || '';
+            const address = document.getElementById('customerAddress')?.value || '';
             
-            if (!name || !phone || !email || !address) {
+            if (!name.trim() || !phone.trim() || !email.trim() || !address.trim()) {
                 alert('請填寫完整的訂購人資訊！');
                 return;
             }
@@ -262,14 +253,14 @@ document.addEventListener('DOMContentLoaded', function() {
             const cartItems = document.querySelectorAll('.cart-item');
             let orderDetails = '訂購內容：\n';
             cartItems.forEach(item => {
-                const name = item.querySelector('.product-name').textContent;
-                const quantity = item.querySelector('.quantity').value;
-                const price = item.querySelector('.product-price').textContent;
+                const name = item.querySelector('.product-name')?.textContent || '未知商品';
+                const quantity = item.querySelector('.quantity')?.value || '0';
+                const price = item.querySelector('.product-price')?.textContent || '0';
                 orderDetails += `${name} x ${quantity} (${price})\n`;
             });
             
             // 添加訂購人資訊
-            const note = document.getElementById('customerNote').value;
+            const note = document.getElementById('customerNote')?.value || '';
             
             // 構建通知訊息
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
@@ -283,9 +274,18 @@ document.addEventListener('DOMContentLoaded', function() {
             updateCartDisplay();
             
         } catch (error) {
-            console.error('處理訂單時發生錯誤:', error);
-            alert('處理訂單時發生錯誤，請檢查輸入並重試。');
+            console.error('處理訂單時發生的錯誤:', error);
+            alert('處理訂單時發生錯誤，請檢查輸入並重試。\n錯誤詳情：' + error.message);
         }
+    }
+
+    // 初始化表單提交
+    const form = document.getElementById('cartForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+            submitOrder();
+        });
     }
 
     // 綁定加入購物車按鈕
