@@ -51,26 +51,29 @@
                 <div class="cart-items"></div>
                 <div class="cart-form hidden">
                     <h3>訂購人資訊</h3>
-                    <div class="form-group">
-                        <label for="customerName">姓名</label>
-                        <input type="text" id="customerName" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerPhone">電話</label>
-                        <input type="tel" id="customerPhone" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerEmail">信箱</label>
-                        <input type="email" id="customerEmail" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerAddress">地址</label>
-                        <input type="text" id="customerAddress" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="customerNote">備註</label>
-                        <textarea id="customerNote" rows="3"></textarea>
-                    </div>
+                    <form id="cartForm" action="https://notify-api.line.me/api/notify" method="POST">
+                        <input type="hidden" name="token" value="R/Xor2TVbRcUjh2boUOFwRtL5CAZ5Q8epBoyEmNjl3gLOcd7IrgUIaC6mOfNSA6M1G+uctCI6RS7bmaV2TG2At1c4B7K4lvcv72uAMxtsXiF+b7BdU2E+l1M8t7hVI9e4YuhamMh70HWsVYVeG7SIgdB04t89/1O/w1cDnyilFU=">
+                        <div class="form-group">
+                            <label for="customerName">姓名</label>
+                            <input type="text" id="customerName" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerPhone">電話</label>
+                            <input type="tel" id="customerPhone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerEmail">信箱</label>
+                            <input type="email" id="customerEmail" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerAddress">地址</label>
+                            <input type="text" id="customerAddress" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="customerNote">備註</label>
+                            <textarea id="customerNote" rows="3"></textarea>
+                        </div>
+                    </form>
                 </div>
                 <div class="cart-summary">
                     <div class="total">
