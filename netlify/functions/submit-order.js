@@ -64,18 +64,19 @@ exports.handler = async (event) => {
             
             // 發送通知到 LINE
             try {
-                console.log('LINE Notify API request headers:', {
-                    'Authorization': `Bearer ${token}`,
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                });
-                
-                const response = await got.post('https://notify-api.line.me/api/notify', {
+                const response = await got.post('https://api.line.me/v2/bot/message/push', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json'
                     },
-                    form: {
-                        message: message
+                    json: {
+                        to: 'U0000000000000000000000000000000', // 替換為您的 Line ID
+                        messages: [
+                            {
+                                type: 'text',
+                                text: message
+                            }
+                        ]
                     }
                 });
 
