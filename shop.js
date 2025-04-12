@@ -266,6 +266,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
+            console.log('Sending order to API...');
+            console.log('Order message:', message);
+            
             fetch('/.netlify/functions/submit-order', {
                 method: 'POST',
                 headers: {
@@ -276,14 +279,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ message: message })
             })
             .then(response => {
-                console.log('Netlify API response:', response);
+                console.log('API Response:', response);
+                console.log('API Status:', response.status);
+                console.log('API Headers:', response.headers);
+                
                 if (!response.ok) {
                     throw new Error(`Netlify API returned status ${response.status}`);
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Netlify API response data:', data);
+                console.log('API Response Data:', data);
                 if (data.message === 'Order submitted successfully') {
                     alert('訂單已送出，我們會盡快與您聯繫！');
                     cart = [];
@@ -297,6 +303,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error('Error submitting order:', error);
                 if (error.message.includes('403')) {
                     alert('發送訂單時發生錯誤。請確認：\n1. LINE Notify Token 已正確設置\n2. Token 未過期\n3. Token 有足夠的權限');
+                } else if (error.message.includes('405')) {
+                    alert('發送訂單時發生錯誤。請確認：\n1. Netlify 函數已正確部署\n2. API 端點正確\n3. 函數目錄正確設置');
                 } else {
                     alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
                 }
