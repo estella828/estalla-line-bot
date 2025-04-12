@@ -220,35 +220,49 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
 
-        console.log('結帳時的購物車內容:', cart);
+        // 如果是第一步，顯示訂購人資訊表單
+        if (!this.dataset.step || this.dataset.step === 'cart') {
+            document.querySelector('.cart-items').classList.add('hidden');
+            document.querySelector('.cart-form').classList.remove('hidden');
+            this.textContent = '確認訂購';
+            this.dataset.step = 'form';
+            return;
+        }
 
-        const orderDetails = cart.map(item => {
-            return `${item.name} x${item.quantity} = NT$${item.price * item.quantity}`;
-        }).join('\n');
+        // 如果是第二步，處理表單提交
+        if (this.dataset.step === 'form') {
+            // 驗證表單
+            const name = document.getElementById('customerName').value;
+            const phone = document.getElementById('customerPhone').value;
+            const email = document.getElementById('customerEmail').value;
+            const address = document.getElementById('customerAddress').value;
+            const note = document.getElementById('customerNote').value;
 
-        console.log('完整訂單明細:', orderDetails);
+            if (!name || !phone || !email || !address) {
+                alert('請填寫必要的訂購人資訊！');
+                return;
+            }
 
-        const message = `【訂單明細】\n\n${orderDetails}\n總計金額：${totalAmount.textContent}`;
-
-        if (confirm(message)) {
-            // 簡化訂單訊息
-            const orderMessage = `新訂單\n${orderDetails}\n總金額: ${totalAmount.textContent}`;
-
-            console.log('測試 - 原始訊息:', orderMessage);
-
-            // 使用雙重編碼確保中文正確顯示
-            const lineMessage = encodeURIComponent(orderMessage);
-            console.log('測試 - 編碼後的訊息:', lineMessage);
+            // 測試資料
+            console.log('結帳時的購物車內容:', cart);
+            console.log('訂購人資訊:', { name, phone, email, address, note });
 
             // 發送訂單通知
-            fetch('http://localhost:3000/send-notification', {
+            fetch('/send-notification', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json',
+                    'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    orderDetails: orderMessage,
-                    totalAmount: totalAmount.textContent
+                    orderDetails: cart,
+                    totalAmount: cart.reduce((sum, item) => sum + (item.price * item.quantity), 0),
+                    customerInfo: {
+                        name,
+                        phone,
+                        email,
+                        address,
+                        note
+                    }
                 })
             })
             .then(response => response.json())
@@ -271,14 +285,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // 綁定加入購物車按鈕
     document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', function() {
-            // 先在console輸出按鈕的data屬性
-            console.log('商品按鈕屬性:', {
-                id: this.dataset.id,
-                name: this.dataset.name,
-                price: this.dataset.price
-            });
+        // 移除現有的事件監聽器
+        button.replaceWith(button.cloneNode(true));
+    });
 
+    // 重新綁定事件監聽器
+    document.querySelectorAll('.add-to-cart').forEach(button => {
+        button.addEventListener('click', function() {
             const product = {
                 id: this.dataset.id,
                 name: this.dataset.name,
@@ -286,15 +299,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 quantity: 1
             };
 
-            console.log('添加的商品:', product);
-
             const existingItem = cart.find(item => item.id === product.id);
             if (existingItem) {
                 existingItem.quantity++;
-                console.log('更新現有商品數量:', existingItem);
             } else {
                 cart.push(product);
-                console.log('新增商品到購物車:', cart);
             }
 
             updateCartDisplay();
