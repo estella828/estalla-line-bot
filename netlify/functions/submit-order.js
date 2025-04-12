@@ -62,21 +62,15 @@ exports.handler = async (event) => {
             console.log('Sending notification to LINE Notify...');
             console.log('Using LINE Notify token:', token.substring(0, 5) + '...'); // 只顯示前5個字符
             
-            // 發送通知到 LINE
+            // 發送通知到 LINE Notify
             try {
-                const response = await got.post('https://api.line.me/v2/bot/message/push', {
+                const response = await got.post('https://notify-api.line.me/api/notify', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     },
-                    json: {
-                        to: 'U0000000000000000000000000000000', // 替換為您的 Line ID
-                        messages: [
-                            {
-                                type: 'text',
-                                text: message
-                            }
-                        ]
+                    form: {
+                        message: message
                     }
                 });
 
