@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
-            fetch('/.netlify/functions/submit-order', {
+            fetch('https://cors-anywhere.herokuapp.com/https://taiwanagla2024.netlify.app/.netlify/functions/submit-order', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -357,6 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 body: JSON.stringify({ message: testMessage })
             })
             .then(response => {
+                console.log('Netlify API response:', response);
                 if (!response.ok) {
                     throw new Error('API 返回錯誤狀態');
                 }
