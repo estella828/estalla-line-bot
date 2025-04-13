@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
-            const API_URL = '/.netlify/functions/submit-order';
+            const API_URL = 'https://taiwanagla-2025.netlify.app/.netlify/functions/submit-order';
             console.log('Sending order to API...');
             console.log('Order message:', message);
             
@@ -357,7 +357,7 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const testMessage = '測試訊息：網站正在運作正常';
             
-            const API_URL = '/.netlify/functions/submit-order';
+            const API_URL = 'https://taiwanagla-2025.netlify.app/.netlify/functions/submit-order';
             fetch(API_URL, {
                 method: 'POST',
                 headers: {
