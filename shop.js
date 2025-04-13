@@ -268,10 +268,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Access-Control-Allow-Origin': '*'
+                    'Authorization': 'Bearer ' + (new Date().getTime()) // 添加一個簡單的標記
                 },
                 mode: 'cors',
-                credentials: 'include',
+                credentials: 'same-origin',
                 body: JSON.stringify({ 
                     message: message,
                     cart: cart,
