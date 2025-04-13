@@ -14,11 +14,6 @@
                 <img src="images/logo-transparent.png" alt="台灣藻安有限公司" class="logo-image">
                 <span class="company-name">台灣藻安有限公司</span>
             </div>
-            <button class="menu-toggle" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
             <div class="nav-links">
                 <a href="#home">首頁</a>
                 <a href="#products">產品</a>
@@ -104,93 +99,55 @@
                     <h3>訂購人資訊</h3>
                     <form id="cartForm">
                         <div class="form-group">
-                            <label for="customerName">姓名：</label>
+                            <label for="customerName">姓名</label>
                             <input type="text" id="customerName" name="name" required>
                         </div>
                         <div class="form-group">
-                            <label for="customerPhone">電話：</label>
+                            <label for="customerPhone">電話</label>
                             <input type="tel" id="customerPhone" name="phone" required>
                         </div>
                         <div class="form-group">
-                            <label for="customerEmail">電子郵件：</label>
+                            <label for="customerEmail">信箱</label>
                             <input type="email" id="customerEmail" name="email" required>
                         </div>
                         <div class="form-group">
-                            <label for="customerAddress">地址：</label>
+                            <label for="customerAddress">地址</label>
                             <input type="text" id="customerAddress" name="address" required>
                         </div>
                         <div class="form-group">
-                            <label for="customerNote">備註：</label>
-                            <textarea id="customerNote" name="note"></textarea>
+                            <label for="customerNote">備註</label>
+                            <textarea id="customerNote" name="note" rows="3"></textarea>
                         </div>
-                        <button type="submit" class="submit-btn">提交訂單</button>
+                        <button type="submit" class="btn btn-primary">確認訂購</button>
                     </form>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
+                <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/success.html">
+                    <p style="display: none">
+                        <label>Don't fill this out if you're human: <input name="bot-field" /></label>
+                    </p>
+                    <input type="text" name="name" placeholder="姓名" required>
+                    <input type="email" name="email" placeholder="電子郵件" required>
+                    <input type="tel" name="phone" placeholder="電話">
+                    <textarea name="message" placeholder="訊息內容" required></textarea>
+                    <button type="submit">發送訊息</button>
+                </form>
+                <div class="contact-info">
                     <h3>聯絡資訊</h3>
                     <p>電話：08-7238400</p>
                     <p>手機：0910-840-061 / 0970-899-239</p>
                     <p>地址：屏東縣屏東市和生路一段101-3號</p>
                     <p>電子郵件：taiwanagla2024@gmail.com</p>
                 </div>
-                <div class="footer-section">
-                    <h3>快速連結</h3>
-                    <ul>
-                        <li><a href="#home">首頁</a></li>
-                        <li><a href="#products">產品</a></li>
-                        <li><a href="#about">關於我們</a></li>
-                        <li><a href="#contact">聯絡我們</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>關注我們</h3>
-                    <div class="social-links">
-                        <a href="https://line.me/ti/p/@699bptic" target="_blank"><img src="images/line-logo.png" alt="LINE"></a>
-                    </div>
-                </div>
             </div>
-            <div class="footer-bottom">
-                <p>&copy; 2025 台灣藻安有限公司. All rights reserved.</p>
-            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 台灣藻安有限公司. All rights reserved.</p>
         </div>
     </footer>
 
-    <script>
-        // 導航菜單控制
-        const menuToggle = document.querySelector('.menu-toggle');
-        const navLinks = document.querySelector('.nav-links');
-
-        if (menuToggle && navLinks) {
-            menuToggle.addEventListener('click', () => {
-                menuToggle.classList.toggle('active');
-                navLinks.classList.toggle('active');
-            });
-
-            // 點擊連結時關閉菜單
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (window.innerWidth <= 768) {
-                        menuToggle.classList.remove('active');
-                        navLinks.classList.remove('active');
-                    }
-                });
-            });
-        }
-
-        // 當視窗大小改變時重置菜單狀態
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 768) {
-                menuToggle.classList.remove('active');
-                navLinks.classList.remove('active');
-            }
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
