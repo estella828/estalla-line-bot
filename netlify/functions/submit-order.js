@@ -40,11 +40,11 @@ exports.handler = async (event) => {
             const { message } = JSON.parse(event.body);
             console.log('Parsed message:', message);
             
-            const token = process.env.LINE_NOTIFY_TOKEN;
-            console.log('LINE_NOTIFY_TOKEN is set:', !!token);
+            const userId = process.env.LINE_USER_ID;
+            const token = process.env.LINE_BOT_CHANNEL_ACCESS_TOKEN;
             
-            if (!token) {
-                console.log('LINE_NOTIFY_TOKEN not found in environment variables');
+            if (!userId || !token) {
+                console.log('Missing required environment variables');
                 return {
                     statusCode: 500,
                     headers: {
@@ -53,30 +53,36 @@ exports.handler = async (event) => {
                         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                     },
                     body: JSON.stringify({ 
-                        message: 'LINE Notify token not configured',
-                        error: 'Please set LINE_NOTIFY_TOKEN in Netlify environment variables'
+                        message: 'Configuration error',
+                        error: 'Missing LINE Bot credentials in environment variables'
                     })
                 };
             }
 
-            console.log('Sending notification to LINE Notify...');
-            console.log('Using LINE Notify token:', token.substring(0, 5) + '...'); // 只顯示前5個字符
+            console.log('Sending notification to Line Bot...');
+            console.log('Using Line Bot token:', token.substring(0, 5) + '...');
             
-            // 發送通知到 LINE Notify
+            // 發送通知到 Line Bot
             try {
-                const response = await got.post('https://notify-api.line.me/api/notify', {
+                const response = await got.post('https://api.line.me/v2/bot/message/push', {
                     headers: {
                         'Authorization': `Bearer ${token}`,
-                        'Content-Type': 'application/x-www-form-urlencoded'
+                        'Content-Type': 'application/json'
                     },
-                    form: {
-                        message: message
+                    json: {
+                        to: userId,
+                        messages: [
+                            {
+                                type: 'text',
+                                text: message
+                            }
+                        ]
                     }
                 });
 
-                console.log('LINE Notify API response:', response.body);
+                console.log('Line Bot API response:', response.body);
                 const data = await response.json();
-                console.log('LINE Notify API response data:', data);
+                console.log('Line Bot API response data:', data);
 
                 if (data.status === 200) {
                     return {
@@ -92,7 +98,7 @@ exports.handler = async (event) => {
                         })
                     };
                 } else {
-                    console.error('LINE Notify returned non-200 status:', data);
+                    console.error('Line Bot returned non-200 status:', data);
                     return {
                         statusCode: 500,
                         headers: {
@@ -102,13 +108,15 @@ exports.handler = async (event) => {
                         },
                         body: JSON.stringify({ 
                             message: 'Failed to send notification',
-                            error: data.message || 'LINE Notify returned non-200 status'
+                            error: data.message || 'Line Bot returned non-200 status'
                         })
                     };
                 }
             } catch (error) {
-                console.error('Error sending LINE Notify:', error);
+                console.error('Error sending Line Bot:', error);
                 console.error('Error response:', error.response?.body);
+                
+                // 如果發送失敗，返回錯誤信息
                 return {
                     statusCode: 500,
                     headers: {
