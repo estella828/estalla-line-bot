@@ -91,10 +91,9 @@ exports.handler = async (event) => {
                     }
                 });
 
+                // got 的回應已經是 JSON 格式，不需要再調用 json()
                 console.log('Line Bot API response:', response.body);
-                const data = await response.json();
-                console.log('Line Bot API response data:', data);
-
+                
                 if (response.statusCode === 200) {
                     return {
                         statusCode: 200,
@@ -107,11 +106,11 @@ exports.handler = async (event) => {
                         body: JSON.stringify({ 
                             success: true,
                             message: 'Order submitted successfully',
-                            data: data
+                            data: response.body
                         })
                     };
                 } else {
-                    console.error('Line Bot returned non-200 status:', data);
+                    console.error('Line Bot returned non-200 status:', response.body);
                     return {
                         statusCode: 500,
                         headers: {
@@ -123,7 +122,7 @@ exports.handler = async (event) => {
                         body: JSON.stringify({ 
                             success: false,
                             message: 'Failed to send notification',
-                            error: data.error || 'Unknown error'
+                            error: response.body.error || 'Unknown error'
                         })
                     };
                 }
