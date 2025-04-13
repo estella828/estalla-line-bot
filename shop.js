@@ -243,24 +243,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const phone = document.getElementById('customerPhone')?.value || '';
             const email = document.getElementById('customerEmail')?.value || '';
             const address = document.getElementById('customerAddress')?.value || '';
+            const note = document.getElementById('customerNote')?.value || '';
             
             if (!name.trim() || !phone.trim() || !email.trim() || !address.trim()) {
                 alert('請填寫完整的訂購人資訊！');
                 return;
             }
 
-            // 添加購物車內容到備註
-            const cartItems = document.querySelectorAll('.cart-item');
+            // 從 cart 數組中獲取訂購內容
             let orderDetails = '訂購內容：\n';
-            cartItems.forEach(item => {
-                const name = item.querySelector('.product-name')?.textContent || '未知商品';
-                const quantity = item.querySelector('.quantity')?.value || '0';
-                const price = item.querySelector('.product-price')?.textContent || '0';
-                orderDetails += `${name} x ${quantity} (${price})\n`;
+            cart.forEach(item => {
+                orderDetails += `${item.name} x ${item.quantity} (${item.price}元)\n`;
             });
-            
-            // 添加訂購人資訊
-            const note = document.getElementById('customerNote')?.value || '';
             
             // 構建通知訊息
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
@@ -278,7 +272,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 },
                 mode: 'cors',
                 credentials: 'include',
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ 
+                    message: message,
+                    cart: cart,
+                    customer: {
+                        name: name,
+                        phone: phone,
+                        email: email,
+                        address: address,
+                        note: note
+                    }
+                })
             });
 
             console.log('API Response:', response);
@@ -290,23 +294,18 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             console.log('API Response Data:', data);
 
-            if (data.message === 'Order submitted successfully') {
+            if (data.success) {
                 alert('訂單已送出，我們會盡快與您聯繫！');
                 cart = [];
                 closeCart();
                 updateCartDisplay();
+                document.getElementById('cartForm').reset();
             } else {
-                throw new Error(data.error || 'API returned non-success status');
+                throw new Error(data.message || 'API returned non-success status');
             }
         } catch (error) {
             console.error('Error submitting order:', error);
-            if (error.message.includes('403')) {
-                alert('發送訂單時發生錯誤。請確認：\n1. LINE Notify Token 已正確設置\n2. Token 未過期\n3. Token 有足夠的權限');
-            } else if (error.message.includes('405')) {
-                alert('發送訂單時發生錯誤。請確認：\n1. Netlify 函數已正確部署\n2. API 端點正確\n3. 函數目錄正確設置');
-            } else {
-                alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
-            }
+            alert('訂單提交失敗。\n\n錯誤詳情：' + error.message);
         }
     }
 
