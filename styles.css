@@ -1,12 +1,4 @@
-:root {
-    --primary-color: #00a0e9;
-    --secondary-color: #0077b6;
-    --text-color: #2c3e50;
-    --light-gray: #f8f9fa;
-    --accent-color: #48cae4;
-    --box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-}
-
+/* 基本樣式 */
 * {
     margin: 0;
     padding: 0;
@@ -19,10 +11,212 @@ body {
     color: var(--text-color);
 }
 
+/* 導航欄基本樣式 */
+.navbar {
+    background-color: #ffffff;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem 0;
+    transition: all 0.3s ease;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    transition: transform 0.3s ease;
+}
+
+.logo-image:hover {
+    transform: scale(1.02);
+}
+
+.company-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.nav-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+.line-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: #00C300;
+    border-radius: 4px;
+    color: white;
+    transition: background-color 0.3s ease;
+}
+
+.line-btn:hover {
+    background-color: #00b300;
+}
+
+.line-icon {
+    height: 20px;
+    width: auto;
+}
+
+.cart-btn {
+    position: relative;
+    background-color: var(--primary-color);
+    border: none;
+    font-size: 1.2rem;
+    color: white;
+    cursor: pointer;
+    padding: 4px 16px;
+    border-radius: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 105px;
+    height: 32px;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+.cart-btn:hover {
+    background-color: var(--secondary-color);
+}
+
+.cart-count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: #ff4444;
+    color: white;
+    font-size: 0.9rem;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 手機版樣式 */
+@media (max-width: 768px) {
+    .nav-links {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #ffffff;
+        flex-direction: column;
+        padding: 1rem;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .nav-links.active {
+        display: flex;
+    }
+
+    .nav-links a {
+        padding: 0.5rem 0;
+        width: 100%;
+        text-align: center;
+    }
+
+    .menu-toggle {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 0.5rem;
+    }
+
+    .menu-toggle span {
+        width: 25px;
+        height: 3px;
+        background-color: #333;
+        border-radius: 3px;
+        transition: all 0.3s ease;
+    }
+
+    .menu-toggle.active span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+
+    .menu-toggle.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .menu-toggle.active span:nth-child(3) {
+        transform: rotate(-45deg) translate(5px, -5px);
+    }
+}
+
+/* 其他頁面樣式 */
+.hero {
+    height: 100vh;
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/hero-bg.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    margin-top: 60px; /* 確保內容不會被導航欄遮擋 */
+}
+
+.hero h1 {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+section {
+    padding: 5rem 0;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px;
+    padding: 0 1rem;
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 3rem;
+    color: var(--text-color);
 }
 
 /* Shop Styles */
