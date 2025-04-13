@@ -12,9 +12,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 200,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                    'Access-Control-Allow-Credentials': 'true'
                 },
                 body: ''
             };
@@ -25,9 +26,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 405,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                    'Access-Control-Allow-Credentials': 'true'
                 },
                 body: JSON.stringify({ 
                     message: 'Method not allowed',
@@ -44,16 +46,24 @@ exports.handler = async (event) => {
             const token = process.env.LINE_BOT_CHANNEL_ACCESS_TOKEN;
             const secret = process.env.LINE_BOT_CHANNEL_SECRET;
             
+            console.log('Environment variables:', {
+                hasUserId: !!userId,
+                hasToken: !!token,
+                hasSecret: !!secret
+            });
+            
             if (!userId || !token || !secret) {
                 console.log('Missing required environment variables');
                 return {
                     statusCode: 500,
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                        'Access-Control-Allow-Credentials': 'true'
                     },
                     body: JSON.stringify({ 
+                        success: false,
                         message: 'Configuration error',
                         error: 'Missing LINE Bot credentials in environment variables'
                     })
@@ -89,9 +99,10 @@ exports.handler = async (event) => {
                     return {
                         statusCode: 200,
                         headers: {
-                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                            'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                            'Access-Control-Allow-Credentials': 'true'
                         },
                         body: JSON.stringify({ 
                             success: true,
@@ -104,9 +115,10 @@ exports.handler = async (event) => {
                     return {
                         statusCode: 500,
                         headers: {
-                            'Access-Control-Allow-Origin': '*',
+                            'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                             'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                            'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                            'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                            'Access-Control-Allow-Credentials': 'true'
                         },
                         body: JSON.stringify({ 
                             success: false,
@@ -117,12 +129,14 @@ exports.handler = async (event) => {
                 }
             } catch (apiError) {
                 console.error('Error calling Line Bot API:', apiError);
+                console.error('Error response:', apiError.response?.body);
                 return {
                     statusCode: 500,
                     headers: {
-                        'Access-Control-Allow-Origin': '*',
+                        'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                         'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                        'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                        'Access-Control-Allow-Credentials': 'true'
                     },
                     body: JSON.stringify({ 
                         success: false,
@@ -136,9 +150,10 @@ exports.handler = async (event) => {
             return {
                 statusCode: 400,
                 headers: {
-                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                    'Access-Control-Allow-Credentials': 'true'
                 },
                 body: JSON.stringify({ 
                     success: false,
@@ -152,9 +167,10 @@ exports.handler = async (event) => {
         return {
             statusCode: 500,
             headers: {
-                'Access-Control-Allow-Origin': '*',
+                'Access-Control-Allow-Origin': 'https://main--taiwanagla-2025.netlify.app',
                 'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+                'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With',
+                'Access-Control-Allow-Credentials': 'true'
             },
             body: JSON.stringify({ 
                 success: false,
