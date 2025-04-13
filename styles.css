@@ -157,6 +157,71 @@ img {
     }
 }
 
+/* Logo 和公司名稱 */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 10001; /* 確保 Logo 和公司名稱始終在最上方 */
+}
+
+.logo a {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+    z-index: 10001; /* 確保 Logo 和公司名稱始終在最上方 */
+}
+
+.logo-image {
+    height: 40px;
+    width: auto;
+    transition: transform 0.3s ease;
+    z-index: 10001; /* 確保 Logo 和公司名稱始終在最上方 */
+}
+
+.company-name {
+    font-size: 1.2rem;
+    font-weight: 500;
+    z-index: 10001; /* 確保 Logo 和公司名稱始終在最上方 */
+}
+
+/* 導航連結 */
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+    position: relative;
+    z-index: 10000; /* 確保導航連結在 Logo 之下 */
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: color 0.3s ease;
+    position: relative;
+    z-index: 10000; /* 確保導航連結在 Logo 之下 */
+}
+
+.nav-links a:hover {
+    color: var(--primary-color);
+}
+
+.nav-links a.active {
+    color: var(--primary-color);
+}
+
+/* 導航按鈕 */
+.nav-buttons {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    position: relative;
+    z-index: 10000; /* 確保按鈕在 Logo 之下 */
+}
+
 /* 響應式英雄區塊 */
 .hero {
     min-height: 60vh;
