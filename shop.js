@@ -273,7 +273,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 },
                 mode: 'cors',
                 credentials: 'include',
@@ -361,7 +362,8 @@ document.addEventListener('DOMContentLoaded', function() {
             fetch(API_URL, {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
                 },
                 mode: 'cors',
                 credentials: 'include',
