@@ -37,13 +37,14 @@ exports.handler = async (event) => {
         }
 
         try {
-            const { message } = JSON.parse(event.body);
-            console.log('Parsed message:', message);
+            const body = JSON.parse(event.body);
+            console.log('Parsed request body:', body);
             
             const userId = process.env.LINE_USER_ID;
             const token = process.env.LINE_BOT_CHANNEL_ACCESS_TOKEN;
+            const secret = process.env.LINE_BOT_CHANNEL_SECRET;
             
-            if (!userId || !token) {
+            if (!userId || !token || !secret) {
                 console.log('Missing required environment variables');
                 return {
                     statusCode: 500,
@@ -74,7 +75,7 @@ exports.handler = async (event) => {
                         messages: [
                             {
                                 type: 'text',
-                                text: message
+                                text: body.message
                             }
                         ]
                     }
@@ -84,7 +85,7 @@ exports.handler = async (event) => {
                 const data = await response.json();
                 console.log('Line Bot API response data:', data);
 
-                if (data.status === 200) {
+                if (response.statusCode === 200) {
                     return {
                         statusCode: 200,
                         headers: {
@@ -93,6 +94,7 @@ exports.handler = async (event) => {
                             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                         },
                         body: JSON.stringify({ 
+                            success: true,
                             message: 'Order submitted successfully',
                             data: data
                         })
@@ -107,16 +109,14 @@ exports.handler = async (event) => {
                             'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                         },
                         body: JSON.stringify({ 
+                            success: false,
                             message: 'Failed to send notification',
-                            error: data.message || 'Line Bot returned non-200 status'
+                            error: data.error || 'Unknown error'
                         })
                     };
                 }
-            } catch (error) {
-                console.error('Error sending Line Bot:', error);
-                console.error('Error response:', error.response?.body);
-                
-                // 如果發送失敗，返回錯誤信息
+            } catch (apiError) {
+                console.error('Error calling Line Bot API:', apiError);
                 return {
                     statusCode: 500,
                     headers: {
@@ -125,31 +125,30 @@ exports.handler = async (event) => {
                         'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                     },
                     body: JSON.stringify({ 
-                        message: 'Error sending notification',
-                        error: error.message,
-                        stack: error.stack,
-                        response: error.response?.body
+                        success: false,
+                        message: 'Failed to send notification',
+                        error: apiError.message
                     })
                 };
             }
-        } catch (error) {
-            console.error('Error parsing request:', error);
+        } catch (parseError) {
+            console.error('Error parsing request body:', parseError);
             return {
-                statusCode: 500,
+                statusCode: 400,
                 headers: {
                     'Access-Control-Allow-Origin': '*',
                     'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,OPTIONS',
                     'Access-Control-Allow-Headers': 'Content-Type, Authorization',
                 },
                 body: JSON.stringify({ 
-                    message: 'Error processing request',
-                    error: error.message,
-                    stack: error.stack
+                    success: false,
+                    message: 'Invalid request format',
+                    error: parseError.message
                 })
             };
         }
     } catch (error) {
-        console.error('Error in submit-order function:', error);
+        console.error('Error in handler:', error);
         return {
             statusCode: 500,
             headers: {
@@ -158,9 +157,9 @@ exports.handler = async (event) => {
                 'Access-Control-Allow-Headers': 'Content-Type, Authorization',
             },
             body: JSON.stringify({ 
-                message: 'Error processing order',
-                error: error.message,
-                stack: error.stack
+                success: false,
+                message: 'Internal server error',
+                error: error.message
             })
         };
     }
