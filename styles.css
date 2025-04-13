@@ -188,10 +188,10 @@ body {
     }
 }
 
-/* 其他頁面樣式 */
+/* 首頁樣式 */
 .hero {
     height: 100vh;
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url('images/hero-bg.jpg');
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('images/hero-bg.jpg');
     background-size: cover;
     background-position: center;
     display: flex;
@@ -200,25 +200,21 @@ body {
     text-align: center;
     color: white;
     margin-top: 60px; /* 確保內容不會被導航欄遮擋 */
-    position: relative;
-}
-
-.hero::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.4);
 }
 
 .hero h1 {
     font-size: 3rem;
     margin-bottom: 1rem;
-    color: white;
 }
 
+/* 手機版首頁樣式 */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2rem;
+    }
+}
+
+/* 其他頁面樣式 */
 section {
     padding: 5rem 0;
     padding-top: calc(5rem + 60px); /* 考慮到導航欄的高度 */
