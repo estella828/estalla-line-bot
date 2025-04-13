@@ -152,7 +152,7 @@ body {
 
 /* 首頁英雄區塊 */
 .hero {
-    height: 100vh;
+    min-height: 60vh;
     background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('images/首頁背景.jpg');
     background-size: cover;
     background-position: center;
@@ -163,16 +163,17 @@ body {
     color: white;
     margin-top: 60px;
     padding-top: 60px;
+    padding-bottom: 2rem;
 }
 
 .hero h1 {
-    font-size: 3.5rem;
+    font-size: 2.5rem;
     margin-bottom: 1rem;
     text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
 }
 
 .hero p {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     margin-bottom: 2rem;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
 }
