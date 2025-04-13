@@ -5,7 +5,7 @@
   "main": "index.html",
   "scripts": {
     "start": "echo 'No build command needed'",
-    "build": "mkdir -p dist && cp -r index.html shop.js style.css netlify/dist/"
+    "build": "mkdir -p dist && cp index.html shop.js style.css dist/ && mkdir -p dist/netlify/functions && cp -r netlify/functions/* dist/netlify/functions/"
   },
   "dependencies": {
     "got": "^11.8.5"
