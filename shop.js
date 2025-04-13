@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + (new Date().getTime()) // 添加一個簡單的標記
+                    'Authorization': 'Bearer ' + (new Date().getTime())
                 },
                 mode: 'cors',
                 credentials: 'same-origin',
@@ -299,7 +299,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 cart = [];
                 closeCart();
                 updateCartDisplay();
-                document.getElementById('cartForm').reset();
+                
+                // 找到表單並重置
+                const form = document.querySelector('#cartForm');
+                if (form) {
+                    form.reset();
+                }
             } else {
                 throw new Error(data.message || 'API returned non-success status');
             }
