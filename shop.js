@@ -236,7 +236,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // 提交表單
-    function submitOrder() {
+    async function submitOrder() {
         try {
             // 驗證表單
             const name = document.getElementById('customerName')?.value || '';
@@ -266,10 +266,11 @@ document.addEventListener('DOMContentLoaded', function() {
             const message = `新訂單！\n\n${orderDetails}\n\n訂購人資訊：\n姓名：${name}\n電話：${phone}\n地址：${address}\n備註：${note}`;
             
             // 發送通知到 Netlify
+            const API_URL = '/.netlify/functions/submit-order';
             console.log('Sending order to API...');
             console.log('Order message:', message);
             
-            fetch('/.netlify/functions/submit-order', {
+            const response = await fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -277,41 +278,34 @@ document.addEventListener('DOMContentLoaded', function() {
                 mode: 'cors',
                 credentials: 'include',
                 body: JSON.stringify({ message: message })
-            })
-            .then(response => {
-                console.log('API Response:', response);
-                console.log('API Status:', response.status);
-                console.log('API Headers:', response.headers);
-                
-                if (!response.ok) {
-                    throw new Error(`Netlify API returned status ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                console.log('API Response Data:', data);
-                if (data.message === 'Order submitted successfully') {
-                    alert('訂單已送出，我們會盡快與您聯繫！');
-                    cart = [];
-                    closeCart();
-                    updateCartDisplay();
-                } else {
-                    throw new Error(data.error || 'API returned non-success status');
-                }
-            })
-            .catch(error => {
-                console.error('Error submitting order:', error);
-                if (error.message.includes('403')) {
-                    alert('發送訂單時發生錯誤。請確認：\n1. LINE Notify Token 已正確設置\n2. Token 未過期\n3. Token 有足夠的權限');
-                } else if (error.message.includes('405')) {
-                    alert('發送訂單時發生錯誤。請確認：\n1. Netlify 函數已正確部署\n2. API 端點正確\n3. 函數目錄正確設置');
-                } else {
-                    alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
-                }
             });
+
+            console.log('API Response:', response);
+            
+            if (!response.ok) {
+                throw new Error(`Netlify API returned status ${response.status}`);
+            }
+
+            const data = await response.json();
+            console.log('API Response Data:', data);
+
+            if (data.message === 'Order submitted successfully') {
+                alert('訂單已送出，我們會盡快與您聯繫！');
+                cart = [];
+                closeCart();
+                updateCartDisplay();
+            } else {
+                throw new Error(data.error || 'API returned non-success status');
+            }
         } catch (error) {
-            console.error('Error in submitOrder function:', error);
-            alert('處理訂單時發生錯誤，請檢查輸入並重試。\n錯誤詳情：' + error.message);
+            console.error('Error submitting order:', error);
+            if (error.message.includes('403')) {
+                alert('發送訂單時發生錯誤。請確認：\n1. LINE Notify Token 已正確設置\n2. Token 未過期\n3. Token 有足夠的權限');
+            } else if (error.message.includes('405')) {
+                alert('發送訂單時發生錯誤。請確認：\n1. Netlify 函數已正確部署\n2. API 端點正確\n3. 函數目錄正確設置');
+            } else {
+                alert('發送訂單時發生錯誤，請稍後再試。\n錯誤詳情：' + error.message);
+            }
         }
     }
 
@@ -363,7 +357,8 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const testMessage = '測試訊息：網站正在運作正常';
             
-            fetch('/.netlify/functions/submit-order', {
+            const API_URL = '/.netlify/functions/submit-order';
+            fetch(API_URL, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
