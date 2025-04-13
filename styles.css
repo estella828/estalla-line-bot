@@ -129,7 +129,7 @@ img {
     width: 100%;
     background: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;
+    z-index: 10000; /* 增加 z-index 以確保導航欄始終在最上方 */
     padding: 1rem 0;
 }
 
@@ -171,6 +171,7 @@ img {
     margin-top: 60px;
     padding-top: 60px;
     padding-bottom: 2rem;
+    z-index: 1; /* 設置較低的 z-index */
 }
 
 @media (max-width: var(--breakpoint-mobile)) {
@@ -360,7 +361,7 @@ body {
     width: 100%;
     background: white;
     box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    z-index: 1000;
+    z-index: 10000; /* 增加 z-index 以確保導航欄始終在最上方 */
     padding: 1rem 0;
 }
 
@@ -489,6 +490,7 @@ body {
     margin-top: 60px;
     padding-top: 60px;
     padding-bottom: 2rem;
+    z-index: 1; /* 設置較低的 z-index */
 }
 
 .hero h1 {
@@ -647,6 +649,8 @@ body {
 /* 頁面內容偏移 */
 .content-offset {
     margin-top: 60px;
+    position: relative;
+    z-index: 2; /* 確保內容在導航欄之下 */
 }
 
 /* 其他樣式 */
@@ -1160,7 +1164,7 @@ body {
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(10px);
     box-shadow: var(--box-shadow);
-    z-index: 1000;
+    z-index: 10000; /* 增加 z-index 以確保導航欄始終在最上方 */
     padding: 0.5rem 0;
     transition: all 0.3s ease;
 }
@@ -1331,6 +1335,7 @@ body {
     text-align: center;
     position: relative;
     overflow: hidden;
+    z-index: 1; /* 設置較低的 z-index */
 }
 
 .hero::after {
