@@ -4,7 +4,8 @@
   "description": "Taiwan Agla 2024 Website",
   "main": "index.html",
   "scripts": {
-    "start": "echo 'No build command needed'"
+    "start": "echo 'No build command needed'",
+    "build": "mkdir -p dist && cp -r index.html shop.js style.css netlify dist/"
   },
   "dependencies": {
     "got": "^11.8.5"
